@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Statistics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#2563eb',
+                        'primary-green': '#10b981',
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-gray-50">
+
+<section class="py-16 md:py-24 relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-green-50">
+        <div class="absolute top-0 left-0 w-full h-full">
+            <div class="animate-pulse absolute top-20 left-10 w-32 h-32 rounded-full bg-primary-green/20 blur-3xl"></div>
+            <div class="animate-pulse absolute bottom-10 right-20 w-40 h-40 rounded-full bg-primary-blue/20 blur-3xl"></div>
+            <div class="animate-pulse absolute top-1/2 left-1/3 w-36 h-36 rounded-full bg-green-200/30 blur-3xl"></div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4 relative inline-block">
+                Our Impact By The Numbers
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary-blue to-primary-green transform scale-x-0 transition-transform duration-500 hover:scale-x-100"></div>
+            </h2>
+            <p class="text-gray-600 text-lg mt-4">Transforming lives through sustainable solutions</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            <!-- Stat Cards -->
+            <div class="stat-card group">
+                <div class="icon-container bg-gradient-to-br from-primary-green to-green-400 mx-auto">
+                    <i class="bi bi-house-heart-fill text-white text-3xl"></i>
+                </div>
+                <div class="text-5xl font-bold text-primary-green mb-4 counter" data-target="12500">0+</div>
+                <p class="text-gray-600 text-lg font-medium">Homes Upgraded</p>
+            </div>
+            
+            <div class="stat-card group">
+                <div class="icon-container bg-gradient-to-br from-primary-blue to-blue-400 mx-auto">
+                    <i class="bi bi-building text-white text-3xl"></i>
+                </div>
+                <div class="text-5xl font-bold text-primary-blue mb-4 counter" data-target="1840">0+</div>
+                <p class="text-gray-600 text-lg font-medium">Businesses Served</p>
+            </div>
+            
+            <div class="stat-card group">
+                <div class="icon-container bg-gradient-to-br from-primary-green to-green-400 mx-auto">
+                    <i class="bi bi-box-seam text-white text-3xl"></i>
+                </div>
+                <div class="text-5xl font-bold text-primary-green mb-4 counter" data-target="215000">0+</div>
+                <p class="text-gray-600 text-lg font-medium">Products Installed</p>
+            </div>
+            
+            <div class="stat-card group">
+                <div class="icon-container bg-gradient-to-br from-primary-blue to-blue-400 mx-auto">
+                    <i class="bi bi-award text-white text-3xl"></i>
+                </div>
+                <div class="text-5xl font-bold text-primary-blue mb-4 counter" data-target="12">0+</div>
+                <p class="text-gray-600 text-lg font-medium">Years of Experience</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .stat-card {
+        @apply bg-white rounded-2xl p-8 transition-all duration-500 ease-in-out;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-container {
+        @apply w-20 h-20 rounded-2xl flex justify-center items-center mb-6 transition-transform duration-500;
+    }
+
+    .stat-card:hover .icon-container {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .counter {
+        background: linear-gradient(45deg, #2563eb, #10b981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        transition: all 0.3s ease;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .stat-card:hover .counter {
+        transform: scale(1.1);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('.counter');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startCount(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+
+    function startCount(counter) {
+        const target = +counter.getAttribute('data-target');
+        const duration = 2000; // 2 seconds
+        const steps = 60;
+        const stepDuration = duration / steps;
+        let count = 0;
+
+        const easeOutQuad = t => t * (2 - t);
+
+        const updateCount = (currentStep) => {
+            if (currentStep <= steps) {
+                const progress = easeOutQuad(currentStep / steps);
+                count = Math.floor(progress * target);
+                counter.innerText = `${count.toLocaleString()}+`;
+                setTimeout(() => updateCount(currentStep + 1), stepDuration);
+            } else {
+                counter.innerText = `${target.toLocaleString()}+`;
+            }
+        };
+
+        updateCount(1);
+    }
+});
+</script>
+
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
